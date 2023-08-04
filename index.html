@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Server-Side CryptoJS Example</title>
+    <!-- ... Rest of your HTML content ... -->
+
+<script>
+    document.getElementById('decrypt-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const encryptedText = document.getElementById('encrypted-text').value;
+        const decryptionPassword = document.getElementById('decryption-password').value;
+
+        const response = await fetch('/decrypt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ encryptedText, decryptionPassword }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            document.getElementById('decrypted-result').textContent = data.decryptedText;
+        } else {
+            const errorData = await response.json();
+            alert('Decryption failed: ' + errorData.error);
+        }
+    });
+</script>
+
+
+</head>
+<body>
+    <h1>Server-Side CryptoJS Example</h1>
+
+    <h2>Encrypt</h2>
+    <form id="encrypt-form">
+        <label for="plain-text">Plain Text:</label>
+        <input type="text" id="plain-text" name="plainText" required>
+        <label for="encryption-password">Encryption Password:</label>
+        <input type="password" id="encryption-password" name="encryptionPassword" required>
+        <button type="submit">Encrypt</button>
+    </form>
+    <p><strong>Encrypted Result:</strong> <span id="encrypted-result"></span></p>
+
+    <h2>Decrypt</h2>
+    <form id="decrypt-form">
+        <label for="encrypted-text">Encrypted Text:</label>
+        <textarea id="encrypted-text" name="encryptedText" required></textarea>
+        <label for="decryption-password">Decryption Password:</label>
+        <input type="password" id="decryption-password" name="decryptionPassword" required>
+        <button type="submit">Decrypt</button>
+    </form>
+    <p><strong>Decrypted Result:</strong> <span id="decrypted-result"></span></p>
+
+    <script>
+        document.getElementById('encrypt-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const plainText = document.getElementById('plain-text').value;
+            const encryptionPassword = document.getElementById('encryption-password').value;
+
+            const response = await fetch('/encrypt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ plainText, encryptionPassword }),
+            });
+
+            const data = await response.json();
+            document.getElementById('encrypted-result').textContent = data.encryptedText;
+        });
+
+        document.getElementById('decrypt-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const encryptedText = document.getElementById('encrypted-text').value;
+            const decryptionPassword = document.getElementById('decryption-password').value;
+
+            const response = await fetch('/decrypt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ encryptedText, decryptionPassword }),
+            });
+
+            const data = await response.json();
+            document.getElementById('decrypted-result').textContent = data.decryptedText;
+        });
+    </script>
+</body>
+</html>
